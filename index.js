@@ -1,4 +1,3 @@
-require("dotenv").config();
 const fs = require("fs");
 const {
   Client,
@@ -12,12 +11,14 @@ const {
   Events
 } = require("discord.js");
 
+// ================== CONFIG ==================
 const INPUT_CHANNEL_ID = "1517351024786931772";
 const STOCK_CHANNEL_ID = "1517351098212679831";
 const AUDIT_CHANNEL_ID = "1517351198267674725";
 
 const ITEMS = ["Copper", "Steel", "Metal Scrap", "Cannabis"];
 
+// ================== CLIENT ==================
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -26,7 +27,11 @@ const client = new Client({
   ]
 });
 
-// ================= FILE HANDLER =================
+// ================== DEBUG TOKEN ==================
+console.log("TOKEN ADA?", !!process.env.TOKEN);
+console.log("TOKEN LENGTH:", process.env.TOKEN?.length);
+
+// ================== FILE SYSTEM ==================
 function readData() {
   return JSON.parse(fs.readFileSync("./data.json", "utf8"));
 }
@@ -43,7 +48,7 @@ function saveHistory(data) {
   fs.writeFileSync("./history.json", JSON.stringify(data, null, 2));
 }
 
-// ================= STOCK MESSAGE =================
+// ================== STOCK MESSAGE ==================
 async function updateStockMessage() {
   const channel = await client.channels.fetch(STOCK_CHANNEL_ID);
   const data = readData();
@@ -68,7 +73,7 @@ async function updateStockMessage() {
   }
 }
 
-// ================= PANEL =================
+// ================== PANEL ==================
 async function sendPanel() {
   const channel = await client.channels.fetch(INPUT_CHANNEL_ID);
 
@@ -89,14 +94,14 @@ async function sendPanel() {
   });
 }
 
-// ================= READY =================
+// ================== READY ==================
 client.once(Events.ClientReady, async () => {
   console.log(`Login sebagai ${client.user.tag}`);
   await updateStockMessage();
 });
 
-// ================= INTERACTIONS =================
-client.on(Events.InteractionCreate, async interaction => {
+// ================== INTERACTIONS ==================
+client.on(Events.InteractionCreate, async (interaction) => {
 
   // ===== SELECT MENU =====
   if (interaction.isStringSelectMenu()) {
@@ -224,8 +229,5 @@ client.on(Events.InteractionCreate, async interaction => {
   }
 });
 
-// ================= DEBUG =================
-console.log("TOKEN ADA?", !!process.env.TOKEN);
-
-// ================= LOGIN =================
-client.login(process.env.TOKEN);
+// ================== LOGIN ==================
+client.login(process.env.TOKEN?.trim());
