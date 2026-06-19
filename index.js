@@ -213,4 +213,9 @@ client.on(Events.InteractionCreate, async interaction => {
   }
 });
 
+});
+
+console.log("TOKEN ADA?", !!process.env.TOKEN);
+console.log("PANJANG TOKEN:", process.env.TOKEN?.length);
+
 client.login(process.env.TOKEN);
